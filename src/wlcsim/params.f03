@@ -1612,7 +1612,7 @@ contains
             wlc_p%DEL = WLC_P__L/WLC_P__LP/(WLC_P__NB-1.0_dp)
         ENDif
         ! std dev of interbead distribution of nearest possible GC, used to initialize sometimes
-        wlc_p%SIGMA = sqrt(2.0_dp*WLC_P__LP*WLC_P__L/3.0_dp)/real(WLC_P__NB - 1)
+        wlc_p%SIGMA = sqrt((2.0_dp*wlc_p%LP*wlc_p%L/3.0_dp)/real(wlc_p%NB - 1))
 
     !     Load the tabulated parameters
 
