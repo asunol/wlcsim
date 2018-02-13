@@ -18,7 +18,7 @@ MAKEDEPEND=./fort_depend.py
 DEP_FILE = wlcsim.dep
 
 # compiler
-FC = mpifort
+FC = gfortran
 # FC = $(shell if [[ type mpifort >/dev/null 2>&1 & ]]; then echo "mpifort"; else; echo "gfortran"; fi)
 #TODO: fallback to gfortran gracefully, maybe with a dummy mpi.mod file?
 
@@ -39,7 +39,7 @@ FCFLAGS = ${PEDANTICFLAGS}
 FLFLAGS = -L/usr/lib/lapack -llapack
 
 # all non-legacy and non-test files should be compiled into wlcsim
-SRC := $(shell find "src" -type f -name '*.f*' \
+SRC := $(shell find "src" -type f -name '*.f[0-9][0-9]' \
 			    -not -path "src/legacy/*" \
 				-not -path "src/tests/*" \
 				-not -path "src/third_party/FLAP/*" \
