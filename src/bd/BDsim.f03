@@ -2,7 +2,7 @@
 
       subroutine BDsim(R,U,NT,N,NP,TIME,TTOT,DT,BROWN, &
            inTON,IDUM,PARA,SIMTYPE,COLLISION_TIME,COL_DIST, &
-           COL_TYPE)
+           COL_TYPE, wlc_p)
 !
 !     External subroutine to perform a Brownian dynamics simulation.
 !
@@ -10,8 +10,10 @@
 !     Written 11-11-13
 
       use mt19937, only : rnorm
-      use params, only : dp
+      use params, only : dp, wlcsim_params
+      use fixation, only : force_fix
       implicit none
+      type(wlcsim_params), intent(in) :: wlc_p 
       real(dp) R(3,NT)  ! Bead positions
       real(dp) U(3,NT)  ! Tangent vectors
       real(dp) TIME     ! Time of BD simulation
@@ -32,8 +34,10 @@
 !     Variables for use in the force calculations
 
       real(dp) FELAS(3,NT) ! Elastic force
+      real(dp) FFIX(3,NT) ! fixation bond force
       real(dp) FPONP(3,NT) ! self-int force
       real(dp) TELAS(3,NT) ! Elastic force
+      real(dp) TFIX(3,NT) ! fixation bond force
       real(dp) TPONP(3,NT) ! self-int force
       real(dp) FORCE    ! External force
 
@@ -85,7 +89,7 @@
       SWDT = 0
 
 !     Setup the geometric parameters and initialize random forces
-
+      FFIX = 0
       IB = 1
       do 10 I = 1,NP
          do 20 J = 1,N
@@ -154,7 +158,9 @@
             call force_elas(FELAS,TELAS,R,U,NT,N,NP,EB,EPAR,EPERP,GAM,ETA,SIMTYPE)
 
 !     Calculate the self forces
-
+            if (wlc_p%include_fixation) then
+               call force_fix(FFIX, TFIX, R, U, NT, wlc_p)
+            endif
             if (inTON == 1) then
                call force_ponp(FPONP,R,NT,N,NP,LHC,VHC,LBOX,GAM,DT,XIR,SWDT)
 
@@ -188,12 +194,12 @@
             IB = 1
             do 70 I = 1,NP
                do 80 J = 1,N
-                  DRDT(1,IB,RK) = (FELAS(1,IB) + FPONP(1,IB))/XIR
-                  DRDT(2,IB,RK) = (FELAS(2,IB) + FPONP(2,IB))/XIR
-                  DRDT(3,IB,RK) = (FELAS(3,IB) + FPONP(3,IB))/XIR
-                  DUDT(1,IB,RK) = (TELAS(1,IB) + TPONP(1,IB))/XIU
-                  DUDT(2,IB,RK) = (TELAS(2,IB) + TPONP(2,IB))/XIU
-                  DUDT(3,IB,RK) = (TELAS(3,IB) + TPONP(3,IB))/XIU
+                  DRDT(1,IB,RK) = (FELAS(1,IB) + FPONP(1,IB) + FFIX(1,IB))/XIR
+                  DRDT(2,IB,RK) = (FELAS(2,IB) + FPONP(2,IB) + FFIX(2,IB))/XIR
+                  DRDT(3,IB,RK) = (FELAS(3,IB) + FPONP(3,IB) + FFIX(3,IB))/XIR
+                  DUDT(1,IB,RK) = (TELAS(1,IB) + TPONP(1,IB) + TFIX(1,IB))/XIU
+                  DUDT(2,IB,RK) = (TELAS(2,IB) + TPONP(2,IB) + TFIX(2,IB))/XIU
+                  DUDT(3,IB,RK) = (TELAS(3,IB) + TPONP(3,IB) + TFIX(3,IB))/XIU
 
                   if (BROWN == 0) then
                      doTU = DUDT(1,IB,RK)*U(1,IB) + DUDT(2,IB,RK)*U(2,IB) + DUDT(3,IB,RK)*U(3,IB)

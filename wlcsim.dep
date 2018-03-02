@@ -177,6 +177,7 @@ src/mc/MC_external_field.o : src/defines.inc src/mc/MC_external_field.f03 \
 src/util/colsort.o : src/defines.inc src/util/colsort.f03
 	gfortran -c -ggdb -Jsrc -Isrc -Isrc/third_party/FLAP/exe/mod -Isrc/third_party -cpp -fcheck=all -Wall -pedantic -fall-intrinsics -Wno-surprising -Waliasing -Wconversion-extra -Wcompare-reals -Warray-temporaries -Warray-bounds -Wattributes -Wextra   src/util/colsort.f03 -o src/util/colsort.o
 src/bd/BDsim.o : src/defines.inc src/bd/BDsim.f03 \
+	src/bd/force_fix.o \
 	src/wlcsim/params.o \
 	src/third_party/mt19937.o
 	gfortran -c -ggdb -Jsrc -Isrc -Isrc/third_party/FLAP/exe/mod -Isrc/third_party -cpp -fcheck=all -Wall -pedantic -fall-intrinsics -Wno-surprising -Waliasing -Wconversion-extra -Wcompare-reals -Warray-temporaries -Warray-bounds -Wattributes -Wextra   src/bd/BDsim.f03 -o src/bd/BDsim.o
@@ -204,6 +205,9 @@ src/wlcsim/wlcsim_brad.o : src/defines.inc src/wlcsim/wlcsim_brad.f03 \
 src/wlcsim/init_MPI.o : src/defines.inc src/wlcsim/init_MPI.f03 \
 	src/wlcsim/params.o
 	gfortran -c -ggdb -Jsrc -Isrc -Isrc/third_party/FLAP/exe/mod -Isrc/third_party -cpp -fcheck=all -Wall -pedantic -fall-intrinsics -Wno-surprising -Waliasing -Wconversion-extra -Wcompare-reals -Warray-temporaries -Warray-bounds -Wattributes -Wextra   src/wlcsim/init_MPI.f03 -o src/wlcsim/init_MPI.o
+src/bd/force_fix.o : src/defines.inc src/bd/force_fix.f03 \
+	src/wlcsim/params.o
+	gfortran -c -ggdb -Jsrc -Isrc -Isrc/third_party/FLAP/exe/mod -Isrc/third_party -cpp -fcheck=all -Wall -pedantic -fall-intrinsics -Wno-surprising -Waliasing -Wconversion-extra -Wcompare-reals -Warray-temporaries -Warray-bounds -Wattributes -Wextra   src/bd/force_fix.f03 -o src/bd/force_fix.o
 src/bd/stressp.o : src/defines.inc src/bd/stressp.f03 \
 	src/wlcsim/params.o
 	gfortran -c -ggdb -Jsrc -Isrc -Isrc/third_party/FLAP/exe/mod -Isrc/third_party -cpp -fcheck=all -Wall -pedantic -fall-intrinsics -Wno-surprising -Waliasing -Wconversion-extra -Wcompare-reals -Warray-temporaries -Warray-bounds -Wattributes -Wextra   src/bd/stressp.f03 -o src/bd/stressp.o

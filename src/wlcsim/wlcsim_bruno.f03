@@ -65,7 +65,7 @@ TSAVE = save_ind*WLC_P__STEPSPERSAVE*wlc_p%DT
 !brown always true
 call BDsim(wlc_d%R, wlc_d%U, wlc_p%NT, WLC_P__NB, WLC_P__NP, wlc_d%TIME, TSAVE, &
            wlc_p%DT, .true., WLC_P__INTERP_BEAD_LENNARD_JONES, IDUM, pack_as_para(wlc_p), wlc_p%SIMTYPE, &
-           wlc_d%coltimes, WLC_P__COLLISIONRADIUS, WLC_P__COLLISIONDETECTIONTYPE)
+           wlc_d%coltimes, WLC_P__COLLISIONRADIUS, WLC_P__COLLISIONDETECTIONTYPE, wlc_p)
 
 
 call stress(SIG, wlc_d%R, wlc_d%U, wlc_p%NT, WLC_P__NB, WLC_P__NP, &

@@ -69,6 +69,11 @@
 ! DEFAULTS COMMENT: ! no intrapolymer interactions by default
 ! TYPE: LOGICAL
 
+#define WLC_P__INCLUDE_FIXATION .TRUE.
+! VARIABLE COMMENT: ! whether to have beads within fix_r "bind"
+! DEFAULTS COMMENT: ! no fixation by default
+! TYPE: LOGICAL
+
 #define WLC_P__CHANGINGCHEMICALIDENTITY .FALSE.
 ! VARIABLE COMMENT: ! whether many types of bead exist
 ! DEFAULTS COMMENT: ! Only one type of bead
@@ -315,6 +320,10 @@
 ! DEFAULTS COMMENT: Set to zero for no exclusion
 ! TYPE: REAL(DP)
 
+#define WLC_P__FIX_R 20.0_DP
+! VARIABLE COMMENT: Radius at which two beads become "fixed" together
+! DEFAULTS COMMENT: set this yourself!
+! TYPE: REAL(DP)
 
 ! ----------------------------
 !

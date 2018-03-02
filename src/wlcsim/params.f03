@@ -79,6 +79,7 @@ module params
         integer nT                ! Total number of beads  NT = nBpM*nMpP*np
         real(dp) dt ! sets time scale of simulation
         real(dp) l0       ! Path length between beads. (meaning unknown for gaussian chain?)
+        real(dp) fix_r
         real(dp) gam    ! average equilibrium interbead spacing
         real(dp) eta    ! bend-shear coupling parameter
         real(dp) xir    ! drag per unit persistence length
@@ -127,6 +128,7 @@ module params
         real(dp) Couple_ON  ! fraction of Coupling energy contributing to "calculated" energy
         logical field_int_on ! include field interactions (e.g. A/B interactions) uses many of the same functions as the chemical identity/"meth"ylation code, but energies are calcualted via a field-based approach
         logical chi_l2_on
+        logical include_fixation
 
     !   parallel Tempering parameters
 
@@ -384,6 +386,8 @@ contains
         wlc_p%MOVESPERSTEP(9) = WLC_P__MOVESPERSTEP_CHAIN_EXCHANGE
         wlc_p%MOVESPERSTEP(10) = WLC_P__MOVESPERSTEP_REPTATION
         wlc_p%MOVESPERSTEP(11) = WLC_P__MOVESPERSTEP_SUPER_REPTATION
+        wlc_p%fix_r = WLC_P__FIX_R
+        wlc_p%include_fixation = WLC_P__INCLUDE_FIXATION
 
     end subroutine set_param_defaults
 

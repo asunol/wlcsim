@@ -82,7 +82,7 @@ do while (wlc_d%time < TSAVE)
     !brown always true
     call BDsim(wlc_d%R, wlc_d%U, wlc_p%NT, WLC_P__NB, WLC_P__NP, wlc_d%TIME, wlc_d%time + wlc_p%DT, &
             wlc_p%DT, .true., WLC_P__INTERP_BEAD_LENNARD_JONES, IDUM, pack_as_para(wlc_p), wlc_p%SIMTYPE, &
-            wlc_d%coltimes, WLC_P__COLLISIONRADIUS, WLC_P__COLLISIONDETECTIONTYPE)
+            wlc_d%coltimes, WLC_P__COLLISIONRADIUS, WLC_P__COLLISIONDETECTIONTYPE, wlc_p)
     call get_looping_events(wlc_d%R, wlc_p%NT, WLC_P__COLLISIONRADIUS, &
             col_state, num_events, events)
     call print_loop_events(loop_file_name, wlc_d%time, wlc_p%NT, events, &
