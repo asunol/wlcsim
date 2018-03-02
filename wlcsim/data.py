@@ -101,6 +101,7 @@ def df_from_coltimes_method1(coltimes):
     # method 2: still slow from creating Series?
     return df
 
+
 def non_overlapping_pairs(length, spacing, max_pairs=None, min_pairs=0):
     """Return the "most spaced" possible sets of pairs of indices that are a
     specific spacing apart, for getting statistics that aren't biased by the
@@ -181,23 +182,6 @@ class Sim:
         self.load_method = load_method
         self._has_loaded_r = False
 
-    def guess_input_name(sim_path, input_file):
-        bruno_input_name = os.path.join(sim_path, 'input', 'input')
-        quinn_input_name = os.path.join(sim_path, 'input', 'params')
-        if input_file:
-            if os.path.isfile(input_file):
-                return input_file
-            elif os.path.is_file(os.path.join(sim_path, input_file)):
-                return os.path.join(sim_path, input_file)
-            elif os.path.is_file(os.path.join(sim_path, 'input', input_file)):
-                return os.path.join(sim_path, 'input', input_file)
-        if os.path.isfile(bruno_input_name):
-            return bruno_input_name
-        elif os.path.isfile(quinn_input_name):
-            return quinn_input_name
-        else:
-            return None
-
     @cached_property
     def parsed_input(self):
         return ParsedInput(self.input_file)
@@ -245,6 +229,27 @@ class Sim:
         else:
             rend2end = self.r[:,:,:,-1] - self.r[:,:,:,0]
         return rend2end
+
+    def guess_input_name(sim_path, input_file=''):
+
+        bruno_input_name = os.path.join(sim_path, 'input', 'input')
+        quinn_input_name = os.path.join(sim_path, 'input', 'params')
+        defines_file = os.path.join(sim_path, 'src', 'defines.inc')
+        if input_file:
+            if os.path.isfile(input_file):
+                return input_file
+            elif os.path.is_file(os.path.join(sim_path, input_file)):
+                return os.path.join(sim_path, input_file)
+            elif os.path.is_file(os.path.join(sim_path, 'input', input_file)):
+                return os.path.join(sim_path, 'input', input_file)
+        if os.path.isfile(defines_file):
+            return defines_file
+        elif os.path.isfile(bruno_input_name):
+            return bruno_input_name
+        elif os.path.isfile(quinn_input_name):
+            return quinn_input_name
+        else:
+            return None
 
     @cached_property
     def u0(self):

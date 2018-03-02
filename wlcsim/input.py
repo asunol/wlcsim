@@ -17,6 +17,7 @@ from enum import Enum
 class InputFormat(Enum):
     ORIGINAL=1
     LENA=2
+    DEFINES=3
 
 renamer = {'COL_TYPE': 'COLLISIONDETECTIONTYPE', 'COLTYPE': 'COLLISIONDETECTIONTYPE', 'FPT_DIST': 'COLLISIONRADIUS',
            'INTON': 'INTERPBEADLENNARDJONES', 'N': 'NB', 'INDMAX': 'NUMSAVEPOINTS'}
@@ -54,7 +55,7 @@ def correct_param_value(name, value):
 
 class ParsedInput(object):
     """Knows how to handle various input file types used by wlcsim simulator
-    over the years, and transparently converts into new parameter naming
+    over the years, and transparently converts into InputFormat=2 naming
     conventions.
 
     input = ParsedInput(file_name)
@@ -64,12 +65,14 @@ class ParsedInput(object):
 
     """
 
-    def __init__(self, input_file=None, params=None):
+    def __init__(self, input_file=None, params=None, file_format=InputFormat.LENA):
         """Can be constructed from an input file or from params directly. If an
         input file is provided, params are just ignored if passed in."""
         self.params = {}
         self.ordered_param_names = []
-        self.file_format = InputFormat.LENA
+        self.file_format = file_format
+        if file_format is InputFormat.DEFINES:
+            raise ValueError('Cannot output as DEFINES!')
         self.input_file = input_file
         if input_file is not None:
             # if we get the sim dir or the input dir, resolve to the actual input file
@@ -86,7 +89,7 @@ class ParsedInput(object):
             Warning('ParsedInput: no params or input file provided!')
 
     def __repr__(self):
-        return str(self.params)
+        return "(input: {}, format: {}, params: {})".format(self.input_file, self.file_format, self.params)
 
     @property
     def ordered_param_values(self):
@@ -123,6 +126,9 @@ class ParsedInput(object):
         specifies them on the same line."""
         # first see if there are any comment lines. if so, we immediately know
         # the file type
+        if 'defines.inc' in self.input_file:
+            self.input_format = InputFormat.DEFINES
+            return
         with open(self.input_file) as f:
             for line in f:
                 if not line:
@@ -155,6 +161,8 @@ class ParsedInput(object):
             self.parse_original_params_file()
         elif self.input_format == InputFormat.LENA:
             self.parse_lena_params_file()
+        elif self.input_format == InputFormat.DEFINES:
+            self.parse_defines_params_file()
 
     def parse_lena_params_file(self):
         """Lena-style input files have comment lines starting with a "#". Any
@@ -172,6 +180,21 @@ class ParsedInput(object):
         with open(self.input_file) as f:
             for line in f:
                 if not line or line[0] == '#':
+                    continue
+                match = name_value_re.match(line)
+                if match is None:
+                    continue
+                name, value = match.groups()
+                self.append_param(name, value)
+
+    def parse_defines_params_file(self):
+        """
+        Parse the defines.inc file that makes up our input now.
+        """
+        name_value_re = re.compile('#define\s*WLC_P__([_A-Za-z][_A-Za-z0-9]*)\s*(.*)\s*')
+        with open(self.input_file) as f:
+            for line in f:
+                if not line or line[0] == '!':
                     continue
                 match = name_value_re.match(line)
                 if match is None:
