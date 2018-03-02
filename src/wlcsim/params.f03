@@ -419,10 +419,6 @@ contains
                 print*, "not capable of more than one rings"
                 stop
             endif
-            if (WLC_P__INITCONDTYPE == 'randomWalkWithBoundary') then
-                print*, "initCondType = 7 doesn't know how to make a ring."
-                stop
-            endif
         endif
 
         if (WLC_P__LBOX_X .ne. WLC_P__LBOX_X) then
@@ -676,6 +672,11 @@ contains
         else
             allocate(wlc_d%coltimes(1,1))
             wlc_d%coltimes = nan
+        endif
+
+        if (WLC_P__READ_SEED_FROM_FILE) then
+            open (unit=178, file='input/random_seed')
+            read (178,*) wlc_d%rand_seed
         endif
 
 #if MPI_VERSION
@@ -1641,7 +1642,7 @@ contains
             wlc_p%DEL = WLC_P__L/WLC_P__LP/(WLC_P__NB-1.0_dp)
         ENDif
         ! std dev of interbead distribution of nearest possible GC, used to initialize sometimes
-        wlc_p%SIGMA = sqrt((2.0_dp*wlc_p%LP*wlc_p%L/3.0_dp)/real(wlc_p%NB - 1))
+        wlc_p%SIGMA = sqrt((2.0_dp*WLC_P__LP*WLC_P__L/3.0_dp)/real(WLC_P__NB - 1))
 
     !     Load the tabulated parameters
 

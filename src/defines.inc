@@ -59,6 +59,8 @@
 ! DEFAULTS COMMENT: ! don't track first passage time collisions between beads
 ! TYPE: INTEGER
 
+#define WLC_P__EXPLICIT_BINDING .FALSE.
+
 #define WLC_P__RESTART .FALSE.
 ! VARIABLE COMMENT: ! whether we are restarting from a previous sim or not
 ! DEFAULTS COMMENT: ! don't restart from previously saved simulation
@@ -113,6 +115,12 @@
 ! VARIABLE COMMENT: ! Externally applied field (e.g. radial binding)
 ! DEFAULTS COMMENT: !
 ! TYPE: LOGICAL
+
+#define WLC_P__READ_SEED_FROM_FILE .TRUE.
+! VARIABLE COMMENT: ! whether or not to read the random seed from a file
+! DEFAULTS COMMENT: !
+! TYPE: LOGICAL
+
 
 ! ----------------------------
 !
