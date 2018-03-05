@@ -677,6 +677,7 @@ contains
         if (WLC_P__READ_SEED_FROM_FILE) then
             open (unit=178, file='input/random_seed')
             read (178,*) wlc_d%rand_seed
+            call random_setseed(wlc_d%rand_seed, wlc_d%rand_stat)
         endif
 
 #if MPI_VERSION
