@@ -71,7 +71,7 @@
 ! DEFAULTS COMMENT: ! no intrapolymer interactions by default
 ! TYPE: LOGICAL
 
-#define WLC_P__INCLUDE_FIXATION .TRUE.
+#define WLC_P__INCLUDE_FIXATION .FALSE.
 ! VARIABLE COMMENT: ! whether to have beads within fix_r "bind"
 ! DEFAULTS COMMENT: ! no fixation by default
 ! TYPE: LOGICAL
